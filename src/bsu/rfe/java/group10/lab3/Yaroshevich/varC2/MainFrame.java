@@ -90,6 +90,7 @@ public class MainFrame extends JFrame {
                         "О программе",JOptionPane.INFORMATION_MESSAGE,icon);
             }
         };
+        // Добавление в меню
         aboutProgramMenuItem=helpMenu.add(aboutProgramAction);
         aboutProgramMenuItem.setEnabled(true);
         // Создать новое "действие" по сохранию в текстовый файл

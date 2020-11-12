@@ -30,7 +30,7 @@ public class GornerTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 4;
     }
 
     @Override
@@ -42,16 +42,28 @@ public class GornerTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         //Вычислить значение X как НАЧАЛО_ОТРЕЗКА + ШАГ*НОМЕР_СТРОКИ
         double x = from + step*rowIndex;
-        if(columnIndex==0){
-            return x;
-        } else{
-            Double result=0.0;
-            // Вычисление значения в точке по схеме Горнера.
-            // Вспомнить 1-ый курс и реализовать
-            for(int i=0;i<coefficients.length;i++){
-                result=result*x + coefficients[i];
+        switch (columnIndex) {
+            case 0:
+                return x;
+            case 1:{
+                Double result = 0.0;
+                // Вычисление значения в точке по схеме Горнера.
+                // Вспомнить 1-ый курс и реализовать
+                for (int i = 0; i < coefficients.length; i++) {
+                    result = result * x + coefficients[i];
+                }
+                return result;
             }
-            return result;
+            case 2:{
+                Double result =0.0;
+                for (int i = 0; i < coefficients.length; i++) {
+                    result+=Math.pow(x,coefficients.length-i-1)*coefficients[i];
+                }
+                return result;
+            }
+            default: {
+                return Math.abs((Double)getValueAt(rowIndex,1)-(Double)getValueAt(rowIndex,2));
+            }
         }
     }
 
@@ -65,8 +77,12 @@ public class GornerTableModel extends AbstractTableModel {
        switch (column) {
            case 0:
                return "Значение X";
-           default:
+           case 1:
                return "Значение многочлена";
+           case 2:
+               return "С помощью Math.pow()";
+           default:
+               return "Разница между значениями";
        }
     }
 }
