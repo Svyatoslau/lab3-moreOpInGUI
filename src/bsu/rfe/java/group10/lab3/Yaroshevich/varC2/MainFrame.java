@@ -21,6 +21,7 @@ public class MainFrame extends JFrame {
     private JMenuItem saveToTextMenuItem;
     private JMenuItem saveToGraphicsMenuItem;
     private JMenuItem searchValueMenuItem;
+    private JMenuItem aboutProgramMenuItem;
     // Поля ввода для считывания значений переменных
     private JTextField textFieldFrom;
     private JTextField textFieldTo;
@@ -52,6 +53,9 @@ public class MainFrame extends JFrame {
         // Добавить пункт "Таблица"
         JMenu tableMenu = new JMenu("Таблица");
         menuBar.add(tableMenu);
+        // Добавить пункт "Cправка"
+        JMenu helpMenu =new JMenu("Справка");
+        menuBar.add(helpMenu);
 
         //Создать новое "действие" по сохранению в текстовый файл
         Action saveToTextAction = new AbstractAction("Сохранить в текстовый файл") {
@@ -76,6 +80,18 @@ public class MainFrame extends JFrame {
         // По умолчанию пункт в меню является недоступным (данных ещё нет)
         saveToTextMenuItem.setEnabled(false);
 
+        // Cоздать новое действие по выводу дилогового окна с информацией автора
+        Action aboutProgramAction = new AbstractAction("О программе") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ImageIcon icon=new ImageIcon(kit.getImage("C:\\study\\Java\\lab3 - more Opptions in GUI\\my_photo.jpg"));
+                JOptionPane.showMessageDialog(MainFrame.this,
+                        new String[]{"- Ярошевич Святослав","- 10 группа"},
+                        "О программе",JOptionPane.INFORMATION_MESSAGE,icon);
+            }
+        };
+        aboutProgramMenuItem=helpMenu.add(aboutProgramAction);
+        aboutProgramMenuItem.setEnabled(true);
         // Создать новое "действие" по сохранию в текстовый файл
         Action saveToGraphicsAction = new AbstractAction("Сохранить данные для построения графика") {
             @Override
