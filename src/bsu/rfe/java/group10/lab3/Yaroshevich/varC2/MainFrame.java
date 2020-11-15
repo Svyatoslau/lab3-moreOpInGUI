@@ -20,6 +20,7 @@ public class MainFrame extends JFrame {
     // Элементы меню
     private JMenuItem saveToTextMenuItem;
     private JMenuItem saveToGraphicsMenuItem;
+    private JMenuItem saveToCSVMenuItem;
     private JMenuItem searchValueMenuItem;
     private JMenuItem aboutProgramMenuItem;
     private JMenuItem findCloseToSimpleNumbers;
@@ -124,6 +125,22 @@ public class MainFrame extends JFrame {
         // По умолчанию пункт меню являеться недоступным(данных ещё нет)
         saveToGraphicsMenuItem.setEnabled(false);
 
+        // Создать новое действие по сохранению в CSV формат
+        Action saveToCSVAction = new AbstractAction("Сохранить данные в формате СSV") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(fileChooser==null){
+                    fileChooser = new JFileChooser();
+                    fileChooser.setCurrentDirectory(new File("."));
+                }
+                if(fileChooser.showSaveDialog(MainFrame.this)==JFileChooser.APPROVE_OPTION){
+                    saveToCSVFile(fileChooser.getSelectedFile());
+                }
+            }
+        };
+        saveToCSVMenuItem=fileMenu.add(saveToCSVAction);
+        saveToCSVAction.setEnabled(false);
+
         // Создать новое действие по поиску значений многочлена
         Action searchValueAction = new AbstractAction("Найти значение многочлена") {
             @Override
@@ -210,6 +227,7 @@ public class MainFrame extends JFrame {
                     // Пометить ряд элементов меню как доступных
                     saveToTextMenuItem.setEnabled(true);
                     saveToGraphicsMenuItem.setEnabled(true);
+                    saveToCSVMenuItem.setEnabled(true);
                     searchValueMenuItem.setEnabled(true);
                     findCloseToSimpleNumbers.setEnabled(true);
                 }catch (NumberFormatException ex){
@@ -303,6 +321,40 @@ public class MainFrame extends JFrame {
             }
         }catch (Exception e){
 
+        }
+    }
+
+    // Запись в формат CSV
+    // Где каждая строка файла - это одна строка таблицы.
+    // Разделителем значений колонок являеться символ запятой ","
+    // Но в руссифицированнойй версии exel разделителем являться символ ";"
+    // Так что я использую ";", т.к. у меня руссифицированный exel ;)
+    protected void  saveToCSVFile(File selectedFile){
+        try{
+            // Создать новый сивольный поток вывода, направленный в указанный файл
+            PrintStream out = new PrintStream(selectedFile);
+            // Записать в поток вывода заголовочные сведения
+            out.println("The results of the tabulation of a polynomial; by Gorner's scheme");
+            out.print("Polynomial:;");
+            for(int i=0;i<coefficients.length;i++){
+                out.print(coefficients[i] + "X^"+(coefficients.length-i-1));
+                if(i!=coefficients.length-1)
+                    out.print("+");
+            }
+            out.println("");
+            out.println("Interval from " + data.getFrom() + " to "+
+                    data.getTo() + ";with step " + data.getStep());
+            // Записать в поток вывода значения вточках
+            out.println("Value X;Value polynomial");
+            for(int i=0;i<data.getRowCount();i++){
+                out.println(data.getValueAt(i,0)+
+                        ";" + data.getValueAt(i,1));
+            }
+            // Закрыть поток
+            out.close();
+        }catch (FileNotFoundException e){
+            // Исключительную ситуацию "Файл не найден" в данном случае можно
+            // не обрабатывать, так как мы файл создаём, а не открываем для чтения
         }
     }
 }
