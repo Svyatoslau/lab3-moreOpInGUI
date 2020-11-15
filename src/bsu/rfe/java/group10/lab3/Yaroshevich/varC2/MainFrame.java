@@ -22,6 +22,7 @@ public class MainFrame extends JFrame {
     private JMenuItem saveToGraphicsMenuItem;
     private JMenuItem searchValueMenuItem;
     private JMenuItem aboutProgramMenuItem;
+    private JMenuItem findCloseToSimpleNumbers;
     // Поля ввода для считывания значений переменных
     private JTextField textFieldFrom;
     private JTextField textFieldTo;
@@ -93,6 +94,18 @@ public class MainFrame extends JFrame {
         // Добавление в меню
         aboutProgramMenuItem=helpMenu.add(aboutProgramAction);
         aboutProgramMenuItem.setEnabled(true);
+
+        // Создать новое действие по нахождения чисел близких к простым
+        Action findCloseToSimpleNumbersAction = new AbstractAction("Найти близкие к простым") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                renderer.findSimple(true);
+                getContentPane().repaint();
+            }
+        };
+        findCloseToSimpleNumbers=tableMenu.add(findCloseToSimpleNumbersAction);
+        findCloseToSimpleNumbers.setEnabled(false);
+
         // Создать новое "действие" по сохранию в текстовый файл
         Action saveToGraphicsAction = new AbstractAction("Сохранить данные для построения графика") {
             @Override
@@ -116,6 +129,7 @@ public class MainFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent event) {
                 // Запросить пользователя ввести искомую строку
+                renderer.findSimple(false);
                 String value = JOptionPane.showInputDialog(MainFrame.this,
                         "Введите значение для поиска","Поиск значения",
                         JOptionPane.QUESTION_MESSAGE);
@@ -197,6 +211,7 @@ public class MainFrame extends JFrame {
                     saveToTextMenuItem.setEnabled(true);
                     saveToGraphicsMenuItem.setEnabled(true);
                     searchValueMenuItem.setEnabled(true);
+                    findCloseToSimpleNumbers.setEnabled(true);
                 }catch (NumberFormatException ex){
                     // В случае ошибки преобразования показать сообщения об ошибке
                     JOptionPane.showMessageDialog(MainFrame.this,

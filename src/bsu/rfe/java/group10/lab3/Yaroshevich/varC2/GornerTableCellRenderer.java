@@ -3,6 +3,7 @@ package bsu.rfe.java.group10.lab3.Yaroshevich.varC2;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
@@ -14,6 +15,7 @@ public class GornerTableCellRenderer implements TableCellRenderer {
     private JPanel panel = new JPanel();
     private JLabel label = new JLabel();
     private DecimalFormat formatter = (DecimalFormat)NumberFormat.getInstance();
+    private Boolean simlpeNumbers= false;
 
     public GornerTableCellRenderer() {
         // Разместить надпись внутри панели
@@ -35,6 +37,10 @@ public class GornerTableCellRenderer implements TableCellRenderer {
 
     public void setNeedle(String needle){
         this.needle=needle;
+    }
+
+    public void findSimple(boolean flag){
+        simlpeNumbers=flag;
     }
 
     @Override
@@ -59,6 +65,28 @@ public class GornerTableCellRenderer implements TableCellRenderer {
         } else {
             // Иначе - в обычный белый
             panel.setBackground(Color.WHITE);
+        }
+        if(simlpeNumbers){
+            final double error = 0.1;
+            double numberFromTable = Double.parseDouble(formattedDouble);
+            Integer bIntegerPart=(int)numberFromTable;
+            Integer eIntegerPart=(int)numberFromTable+1;
+            // Если наще число отклоняеться от целой части больше чем на 0.1
+            // То это число точно не будет входить в погрешность 0.1 для целых чисел
+            if(bIntegerPart>=numberFromTable-error&&bIntegerPart>=0.9){
+                // Проверим число на простоту, выполнив тест на простоту
+                // В Java уже реализован тест Рабина-Миллера в классe BigInteger
+                BigInteger bigInteger= BigInteger.valueOf(bIntegerPart);
+                boolean simpleNumber=   bigInteger.isProbablePrime((int)Math.log(bIntegerPart));
+                // Если число простое окрасим его поле в оранжевый
+                if(simpleNumber) panel.setBackground(Color.ORANGE);
+                else panel.setBackground(Color.WHITE);
+            }else if(eIntegerPart<=numberFromTable+error&&eIntegerPart>=0.9){
+                BigInteger bigInteger= BigInteger.valueOf(eIntegerPart);
+                boolean simpleNumber=bigInteger.isProbablePrime((int)Math.log(eIntegerPart));
+                if(simpleNumber) panel.setBackground(Color.ORANGE);
+                else panel.setBackground(Color.WHITE);
+            }else panel.setBackground(Color.WHITE);
         }
         return panel;
     }
