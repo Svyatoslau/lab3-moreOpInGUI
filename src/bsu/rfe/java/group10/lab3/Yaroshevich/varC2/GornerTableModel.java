@@ -4,6 +4,7 @@ import javax.swing.table.AbstractTableModel;
 
 public class GornerTableModel extends AbstractTableModel {
 
+
     private Double[] coefficients;
     private Double from;
     private Double to;
@@ -55,6 +56,7 @@ public class GornerTableModel extends AbstractTableModel {
                 return result;
             }
             case 2:{
+                // Обычный посчёт с помощью pow()
                 Double result =0.0;
                 for (int i = 0; i < coefficients.length; i++) {
                     result+=Math.pow(x,coefficients.length-i-1)*coefficients[i];
@@ -62,6 +64,7 @@ public class GornerTableModel extends AbstractTableModel {
                 return result;
             }
             default: {
+                //
                 return Math.abs((Double)getValueAt(rowIndex,1)-(Double)getValueAt(rowIndex,2));
             }
         }

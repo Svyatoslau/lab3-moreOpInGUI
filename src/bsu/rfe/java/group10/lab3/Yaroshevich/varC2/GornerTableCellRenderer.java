@@ -30,6 +30,7 @@ public class GornerTableCellRenderer implements TableCellRenderer {
         DecimalFormatSymbols dottedDouble = formatter.getDecimalFormatSymbols();
         dottedDouble.setDecimalSeparator('.');
         formatter.setDecimalFormatSymbols(dottedDouble);
+
     }
 
     public void setNeedle(String needle){
@@ -42,6 +43,13 @@ public class GornerTableCellRenderer implements TableCellRenderer {
         String formattedDouble = formatter.format(value);
         // Установить текст надписи равным строковому представлению числа
         label.setText(formattedDouble);
+        if(Double.parseDouble(formattedDouble)<0){
+            panel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        }else if((Double.parseDouble(formattedDouble)>0)){
+            panel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        }else if(Double.parseDouble(formattedDouble)==0){
+            panel.setLayout(new FlowLayout(FlowLayout.CENTER));
+        }
         if (column==1 && needle!=null && needle.equals(formattedDouble)){
             // Номер столбца = 1 (т.е. второй столбец)
             // + иголка не null (т.е. мы что-то ищем)
