@@ -117,7 +117,7 @@ public class MainFrame extends JFrame {
                 }
                 // Показать диалогавое окно
                 if(fileChooser.showSaveDialog(MainFrame.this)==JFileChooser.APPROVE_OPTION){
-                    saveToGraphicFile(fileChooser.getSelectedFile());
+                    saveToGraphicsFile(fileChooser.getSelectedFile());
                 }
             }
         };
@@ -254,7 +254,9 @@ public class MainFrame extends JFrame {
                 // Пометить элементы меню как не доступные
                 saveToTextMenuItem.setEnabled(false);
                 saveToGraphicsMenuItem.setEnabled(false);
+                saveToCSVMenuItem.setEnabled(false);
                 searchValueMenuItem.setEnabled(false);
+                findCloseToSimpleNumbers.setEnabled(false);
                 // Обновить область содержания главного окна
                 getContentPane().validate();
             }
@@ -308,21 +310,25 @@ public class MainFrame extends JFrame {
             // не обрабатывать, так как мы файл создаём, а не открываем для чтения
         }
     }
-    protected void  saveToGraphicFile(File selectedFile){
-        try{
-            // Создать байтовый поток вывода, направленный в указанный файл
-            DataOutputStream out = new DataOutputStream(new FileOutputStream(selectedFile));
-            for(int i =0;i<data.getRowCount();i++){
-                // Записть в поток вывода значения X в точке
+    protected void saveToGraphicsFile(File selectedFile) {
+        try {
+            // Создать новый байтовый поток вывода, направленный в
+            // указанный файл
+            DataOutputStream out = new DataOutputStream(new
+                    FileOutputStream(selectedFile));
+            // Записать в поток вывода попарно значение X в точке,
+            //значение многочлена в точке
+            for (int i = 0; i<data.getRowCount(); i++) {
                 out.writeDouble((Double)data.getValueAt(i,0));
-                // Записать значения многочлена в точке
                 out.writeDouble((Double)data.getValueAt(i,1));
-                out.close();
             }
-        }catch (Exception e){
+            // Закрыть поток вывода
+            out.close();
+        } catch (Exception e) {
 
         }
     }
+
 
     // Запись в формат CSV
     // Где каждая строка файла - это одна строка таблицы.
